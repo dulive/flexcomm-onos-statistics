@@ -7,27 +7,38 @@ import org.onosproject.net.PortNumber;
  */
 public class PortStats {
 
-    public PortNumber portNumber;
-    public double consumption;
+  public PortNumber portNumber;
+  public double currentConsumption;
+  public double powerDrawn;
 
-    public PortStats(PortNumber portNumber, double consumption) {
-        this.portNumber = portNumber;
-        this.consumption = consumption;
-    }
+  public PortStats(PortNumber portNumber, double currentConsumption, double powerDrawn) {
+    this.portNumber = portNumber;
+    this.currentConsumption = currentConsumption;
+    this.powerDrawn = powerDrawn;
+  }
 
-    public PortNumber getPortNumber() {
-        return portNumber;
-    }
+  public PortNumber getPortNumber() {
+    return portNumber;
+  }
 
-    public void setPortNumber(PortNumber portNumber) {
-        this.portNumber = portNumber;
-    }
+  public void setPortNumber(PortNumber portNumber) {
+    this.portNumber = portNumber;
+  }
 
-    public double getConsumption() {
-        return consumption;
-    }
+  public double getCurrentConsumption() {
+    return currentConsumption;
+  }
 
-    public void setConsumption(double consumption) {
-        this.consumption = consumption;
-    }
+  public void setCurrentConsumption(double currentConsumption) {
+    this.currentConsumption = currentConsumption;
+  }
+
+  public double getPowerDrawn() {
+    return powerDrawn;
+  }
+
+  public void setPowerDrawn(double powerDrawn) {
+    this.powerDrawn = powerDrawn;
+  }
+
 }

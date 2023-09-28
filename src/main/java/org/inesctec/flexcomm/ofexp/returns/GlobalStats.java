@@ -5,27 +5,31 @@ package org.inesctec.flexcomm.ofexp.returns;
  */
 public class GlobalStats {
 
-    public double consumption;
-    public double load;
+  public double currentConsumption;
+  public double powerDrawn;
 
-    public GlobalStats(double consumption, double load) {
-        this.consumption = consumption;
-        this.load = load;
-    }
+  public GlobalStats() {
+  }
 
-    public double getConsumption() {
-        return consumption;
-    }
+  public GlobalStats(double currentConsumption, double powerDrawn) {
+    this.currentConsumption = currentConsumption;
+    this.powerDrawn = powerDrawn;
+  }
 
-    public void setConsumption(double consumption) {
-        this.consumption = consumption;
-    }
+  public double getCurrentConsumption() {
+    return currentConsumption;
+  }
 
-    public double getLoad() {
-        return load;
-    }
+  public void setCurrentConsumption(double currentConsumption) {
+    this.currentConsumption = currentConsumption;
+  }
 
-    public void setLoad(double load) {
-        this.load = load;
-    }
+  public double getPowerDrawn() {
+    return powerDrawn;
+  }
+
+  public void setPowerDrawn(double powerDrawn) {
+    this.powerDrawn = powerDrawn;
+  }
+
 }
