@@ -28,16 +28,16 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <description>FlexComm OpenFlow Extension handler.</description>
+    <description>OpenFlow Flexcomm Statistics extension.</description>
     <url>http://onosproject.org</url>
 
     <properties>
         <onos.app.name>org.inesctec.flexcomm.ofexp</onos.app.name>
-        <onos.app.title>FlexComm OpenFlow Extension handler.</onos.app.title>
+        <onos.app.title>OpenFlow Flexcomm Statistics extension.</onos.app.title>
         <onos.app.origin>INESC TEC</onos.app.origin>
         <onos.app.category>default</onos.app.category>
         <onos.app.url>http://onosproject.org</onos.app.url>
-        <onos.app.readme>FlexComm OpenFlow Extension handler.</onos.app.readme>
+        <onos.app.readme>OpenFlow Flexcomm Statistics extension.</onos.app.readme>
     </properties>
 
     <dependencies>
