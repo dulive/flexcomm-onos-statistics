@@ -122,10 +122,23 @@ public class FlexcommManager
   }
 
   @Override
+  public Collection<GlobalStatistics> getGlobalDeltaStatistics() {
+    checkPermission(DEVICE_READ);
+    return store.getGlobalDeltaStatistics();
+  }
+
+  @Override
   public GlobalStatistics getGlobalStatistics(DeviceId deviceId) {
     checkPermission(DEVICE_READ);
     checkNotNull(deviceId, DEVICE_ID_NULL);
     return store.getGlobalStatistics(deviceId);
+  }
+
+  @Override
+  public GlobalStatistics getGlobalDeltaStatistics(DeviceId deviceId) {
+    checkPermission(DEVICE_READ);
+    checkNotNull(deviceId, DEVICE_ID_NULL);
+    return store.getGlobalDeltaStatistics(deviceId);
   }
 
   @Override

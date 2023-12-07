@@ -14,16 +14,23 @@ public interface FlexcommStore extends Store<FlexcommEvent, FlexcommStoreDelegat
 
   Collection<GlobalStatistics> getGlobalStatistics();
 
+  Collection<GlobalStatistics> getGlobalDeltaStatistics();
+
   GlobalStatistics getGlobalStatistics(DeviceId deviceId);
 
-  // public Collection<PortStats> getPortStatistics();
+  GlobalStatistics getGlobalDeltaStatistics(DeviceId deviceId);
+
+  // Collection<PortStats> getPortStatistics();
+  // Collection<PortStats> getPortDeltaStatistics();
   //
-  // public List<PortStats> getPortStatistics(DeviceId deviceId);
+  // List<PortStats> getPortStatistics(DeviceId deviceId);
+  // List<PortStats> getPortDeltaStatistics(DeviceId deviceId);
   //
-  // public PortStats getStatisticsForPort(DeviceId deviceId, PortNumber
+  // PortStats getStatisticsForPort(DeviceId deviceId, PortNumber
+  // portNumber);
+  // PortStats getDeltaStatisticsForPort(DeviceId deviceId, PortNumber
   // portNumber);
 
   default void purgeStatistics(DeviceId deviceId) {
   }
-
 }

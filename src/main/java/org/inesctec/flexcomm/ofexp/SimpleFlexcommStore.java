@@ -27,6 +27,7 @@ public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommSt
   private final Logger log = getLogger(getClass());
 
   private final ConcurrentMap<DeviceId, GlobalStatistics> deviceGlobalStats = Maps.newConcurrentMap();
+  private final ConcurrentMap<DeviceId, GlobalStatistics> deviceGlobalDeltaStats = Maps.newConcurrentMap();
 
   @Activate
   public void activate() {
@@ -36,13 +37,23 @@ public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommSt
   @Deactivate
   public void deactivate() {
     deviceGlobalStats.clear();
+    deviceGlobalDeltaStats.clear();
     log.info("Stopped");
   }
 
   @Override
   public FlexcommEvent updateGlobalStatistics(ProviderId providerId, DeviceId deviceId,
       GlobalStatistics globalStatistics) {
+    GlobalStatistics prvStats = deviceGlobalStats.get(deviceId);
+    GlobalStatistics.Builder builder = DefaultGlobalStatistics.builder();
+    GlobalStatistics deltaStats = builder.build();
+    if (prvStats != null) {
+      deltaStats = calcGlobalDeltaStats(deviceId, prvStats, globalStatistics);
+    }
+
+    deviceGlobalDeltaStats.put(deviceId, deltaStats);
     deviceGlobalStats.put(deviceId, globalStatistics);
+
     return new FlexcommEvent(Type.GLOBAL_STATS_UPDATED, globalStatistics);
   }
 
@@ -54,6 +65,27 @@ public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommSt
   @Override
   public GlobalStatistics getGlobalStatistics(DeviceId deviceId) {
     return deviceGlobalStats.get(deviceId);
+  }
+
+  @Override
+  public Collection<GlobalStatistics> getGlobalDeltaStatistics() {
+    return ImmutableSet.copyOf(deviceGlobalDeltaStats.values());
+  }
+
+  @Override
+  public GlobalStatistics getGlobalDeltaStatistics(DeviceId deviceId) {
+    return deviceGlobalDeltaStats.get(deviceId);
+  }
+
+  private GlobalStatistics calcGlobalDeltaStats(DeviceId deviceId, GlobalStatistics prvStats,
+      GlobalStatistics newStats) {
+
+    GlobalStatistics.Builder builder = DefaultGlobalStatistics.builder();
+    GlobalStatistics deltaStats = builder.setDeviceId(deviceId)
+        .setCurrentConsumption(newStats.currentConsumption() - prvStats.currentConsumption())
+        .setPowerDrawn(newStats.powerDrawn() - prvStats.powerDrawn()).build();
+    return deltaStats;
+
   }
 
 }
