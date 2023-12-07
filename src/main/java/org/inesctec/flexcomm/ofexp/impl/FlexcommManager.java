@@ -1,4 +1,4 @@
-package org.inesctec.flexcomm.ofexp;
+package org.inesctec.flexcomm.ofexp.impl;
 
 import java.util.Collection;
 import java.util.Dictionary;
@@ -34,8 +34,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 
-import static org.inesctec.flexcomm.ofexp.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION;
-import static org.inesctec.flexcomm.ofexp.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION_DEFAULT;
+import static org.inesctec.flexcomm.ofexp.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION;
+import static org.inesctec.flexcomm.ofexp.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION_DEFAULT;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.onosproject.security.AppGuard.checkPermission;
 import static org.onosproject.security.AppPermission.Type.DEVICE_READ;

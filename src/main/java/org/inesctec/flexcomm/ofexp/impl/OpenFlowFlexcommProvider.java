@@ -1,10 +1,11 @@
-package org.inesctec.flexcomm.ofexp;
+package org.inesctec.flexcomm.ofexp.impl;
 
 import java.util.Dictionary;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 
+import org.inesctec.flexcomm.ofexp.api.DefaultGlobalStatistics;
 import org.inesctec.flexcomm.ofexp.api.FlexcommProvider;
 import org.inesctec.flexcomm.ofexp.api.FlexcommProviderRegistry;
 import org.inesctec.flexcomm.ofexp.api.FlexcommProviderService;
@@ -38,9 +39,9 @@ import org.slf4j.Logger;
 
 import com.google.common.collect.Maps;
 
-import static org.inesctec.flexcomm.ofexp.OsgiPropertyConstants.POLL_FREQ;
-import static org.inesctec.flexcomm.ofexp.OsgiPropertyConstants.POLL_FREQ_DEFAULT;
 import static org.slf4j.LoggerFactory.getLogger;
+import static org.inesctec.flexcomm.ofexp.impl.OsgiPropertyConstants.POLL_FREQ;
+import static org.inesctec.flexcomm.ofexp.impl.OsgiPropertyConstants.POLL_FREQ_DEFAULT;
 import static org.onlab.util.Tools.get;
 import static com.google.common.base.Strings.isNullOrEmpty;
 

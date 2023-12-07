@@ -1,8 +1,9 @@
-package org.inesctec.flexcomm.ofexp;
+package org.inesctec.flexcomm.ofexp.impl;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
 
+import org.inesctec.flexcomm.ofexp.api.DefaultGlobalStatistics;
 import org.inesctec.flexcomm.ofexp.api.FlexcommEvent;
 import org.inesctec.flexcomm.ofexp.api.FlexcommStore;
 import org.inesctec.flexcomm.ofexp.api.FlexcommStoreDelegate;
@@ -87,5 +88,4 @@ public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommSt
     return deltaStats;
 
   }
-
 }

@@ -1,4 +1,4 @@
-package org.inesctec.flexcomm.ofexp;
+package org.inesctec.flexcomm.ofexp.impl;
 
 public final class OsgiPropertyConstants {
 

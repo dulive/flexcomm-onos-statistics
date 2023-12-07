@@ -1,4 +1,4 @@
-package org.inesctec.flexcomm.ofexp;
+package org.inesctec.flexcomm.ofexp.impl;
 
 import java.util.Timer;
 import java.util.TimerTask;

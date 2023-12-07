@@ -1,6 +1,5 @@
-package org.inesctec.flexcomm.ofexp;
+package org.inesctec.flexcomm.ofexp.api;
 
-import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
 import org.onosproject.net.AbstractAnnotated;
 import org.onosproject.net.Annotations;
 import org.onosproject.net.DeviceId;
