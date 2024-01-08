@@ -4,9 +4,6 @@ import org.onosproject.net.AbstractAnnotated;
 import org.onosproject.net.Annotations;
 import org.onosproject.net.DeviceId;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public final class DefaultGlobalStatistics extends AbstractAnnotated implements GlobalStatistics {
 
   private final DeviceId deviceId;
@@ -48,9 +45,9 @@ public final class DefaultGlobalStatistics extends AbstractAnnotated implements 
 
   public static final class Builder implements GlobalStatistics.Builder {
 
-    DeviceId deviceId;
-    double currentConsumption;
-    double powerDrawn;
+    DeviceId deviceId = null;
+    double currentConsumption = 0;
+    double powerDrawn = 0;
     Annotations annotations;
 
     private Builder() {
@@ -87,9 +84,6 @@ public final class DefaultGlobalStatistics extends AbstractAnnotated implements 
 
     @Override
     public DefaultGlobalStatistics build() {
-      checkNotNull(deviceId, "Must specify a device");
-      checkArgument(currentConsumption != 0, "Must specify a current consumption.");
-      checkArgument(powerDrawn != 0, "Must specify a power drawn.");
       return new DefaultGlobalStatistics(deviceId, currentConsumption, powerDrawn, annotations);
     }
 

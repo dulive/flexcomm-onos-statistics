@@ -22,7 +22,7 @@ import com.google.common.collect.Maps;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@Component(immediate = true, service = FlexcommStore.class)
+//@Component(immediate = true, service = FlexcommStore.class)
 public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommStoreDelegate> implements FlexcommStore {
 
   private final Logger log = getLogger(getClass());
