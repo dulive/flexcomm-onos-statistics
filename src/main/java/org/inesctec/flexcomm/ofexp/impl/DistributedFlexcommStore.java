@@ -14,7 +14,6 @@ import org.inesctec.flexcomm.ofexp.api.FlexcommStoreDelegate;
 import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
 import org.onlab.util.KryoNamespace;
 import org.onosproject.net.DeviceId;
-import org.onosproject.net.provider.ProviderId;
 import org.onosproject.store.AbstractStore;
 import org.onosproject.store.serializers.KryoNamespaces;
 import org.onosproject.store.service.EventuallyConsistentMap;
@@ -79,7 +78,7 @@ public class DistributedFlexcommStore extends AbstractStore<FlexcommEvent, Flexc
   }
 
   @Override
-  public FlexcommEvent updateGlobalStatistics(ProviderId providerId, DeviceId deviceId,
+  public FlexcommEvent updateGlobalStatistics(DeviceId deviceId,
       GlobalStatistics globalStatistics) {
 
     GlobalStatistics prvStats = deviceGlobalStats.get(deviceId);

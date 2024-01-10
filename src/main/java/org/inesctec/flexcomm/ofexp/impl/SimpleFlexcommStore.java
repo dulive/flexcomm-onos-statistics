@@ -10,7 +10,6 @@ import org.inesctec.flexcomm.ofexp.api.FlexcommStoreDelegate;
 import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
 import org.inesctec.flexcomm.ofexp.api.FlexcommEvent.Type;
 import org.onosproject.net.DeviceId;
-import org.onosproject.net.provider.ProviderId;
 import org.onosproject.store.AbstractStore;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -43,7 +42,7 @@ public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommSt
   }
 
   @Override
-  public FlexcommEvent updateGlobalStatistics(ProviderId providerId, DeviceId deviceId,
+  public FlexcommEvent updateGlobalStatistics(DeviceId deviceId,
       GlobalStatistics globalStatistics) {
     GlobalStatistics prvStats = deviceGlobalStats.get(deviceId);
     GlobalStatistics.Builder builder = DefaultGlobalStatistics.builder();

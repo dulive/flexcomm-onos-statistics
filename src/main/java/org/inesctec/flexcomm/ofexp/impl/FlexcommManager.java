@@ -43,7 +43,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.onlab.util.Tools.groupedThreads;
 
 // TODO: Add port stats
-// Add also delta stats
 @Component(immediate = true, service = {
     FlexcommService.class,
     FlexcommProviderRegistry.class
@@ -79,7 +78,7 @@ public class FlexcommManager
 
   @Activate
   public void activate(ComponentContext context) {
-    eventExecutor = Executors.newSingleThreadExecutor(groupedThreads("onos/flexcomm", "event"));
+    eventExecutor = Executors.newSingleThreadExecutor(groupedThreads("onos/flexcomm/stats", "event"));
     store.setDelegate(delegate);
     eventDispatcher.addSink(FlexcommEvent.class, listenerRegistry);
     deviceService.addListener(deviceListener);
@@ -168,7 +167,7 @@ public class FlexcommManager
       checkNotNull(globalStatistics, "Global statistics cannot be null");
       checkValidity();
 
-      FlexcommEvent event = store.updateGlobalStatistics(this.provider().id(), deviceId, globalStatistics);
+      FlexcommEvent event = store.updateGlobalStatistics(deviceId, globalStatistics);
       post(event);
     }
 
