@@ -38,6 +38,7 @@
         <onos.app.category>default</onos.app.category>
         <onos.app.url>http://onosproject.org</onos.app.url>
         <onos.app.readme>OpenFlow Flexcomm Statistics extension.</onos.app.readme>
+        <onos.app.requires>org.onosproject.openflow-base</onos.app.requires>
     </properties>
 
     <dependencies>
