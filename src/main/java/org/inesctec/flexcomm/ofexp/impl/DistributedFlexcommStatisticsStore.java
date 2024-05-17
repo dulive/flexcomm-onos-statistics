@@ -1,6 +1,6 @@
 package org.inesctec.flexcomm.ofexp.impl;
 
-import static org.inesctec.flexcomm.ofexp.api.FlexcommEvent.Type.GLOBAL_STATS_UPDATED;
+import static org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent.Type.GLOBAL_STATS_UPDATED;
 import static org.onosproject.store.service.EventuallyConsistentMapEvent.Type.PUT;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.inesctec.flexcomm.ofexp.api.DefaultGlobalStatistics;
-import org.inesctec.flexcomm.ofexp.api.FlexcommEvent;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStore;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStoreDelegate;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStore;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStoreDelegate;
 import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
 import org.onlab.util.KryoNamespace;
 import org.onosproject.net.DeviceId;
@@ -30,9 +30,10 @@ import org.slf4j.Logger;
 
 import com.google.common.collect.ImmutableSet;
 
-@Component(immediate = true, service = FlexcommStore.class)
-public class DistributedFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommStoreDelegate>
-    implements FlexcommStore {
+@Component(immediate = true, service = FlexcommStatisticsStore.class)
+public class DistributedFlexcommStatisticsStore
+    extends AbstractStore<FlexcommStatisticsEvent, FlexcommStatisticsStoreDelegate>
+    implements FlexcommStatisticsStore {
 
   private final Logger log = getLogger(getClass());
 
@@ -78,7 +79,7 @@ public class DistributedFlexcommStore extends AbstractStore<FlexcommEvent, Flexc
   }
 
   @Override
-  public FlexcommEvent updateGlobalStatistics(DeviceId deviceId,
+  public FlexcommStatisticsEvent updateGlobalStatistics(DeviceId deviceId,
       GlobalStatistics globalStatistics) {
 
     GlobalStatistics prvStats = deviceGlobalStats.get(deviceId);
@@ -130,7 +131,7 @@ public class DistributedFlexcommStore extends AbstractStore<FlexcommEvent, Flexc
     public void event(EventuallyConsistentMapEvent<DeviceId, GlobalStatistics> event) {
       if (event.type() == PUT) {
         GlobalStatistics globalStatistics = event.value();
-        notifyDelegate(new FlexcommEvent(GLOBAL_STATS_UPDATED, globalStatistics));
+        notifyDelegate(new FlexcommStatisticsEvent(GLOBAL_STATS_UPDATED, globalStatistics));
       }
     }
   }

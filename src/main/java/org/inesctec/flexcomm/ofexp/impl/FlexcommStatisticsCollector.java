@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class FlexcommStatsCollector {
+public class FlexcommStatisticsCollector {
 
   private final Logger log = getLogger(getClass());
 
@@ -25,7 +25,7 @@ public class FlexcommStatsCollector {
   private int refreshInterval;
   private final AtomicLong xidAtomic = new AtomicLong(1);
 
-  public FlexcommStatsCollector(Timer timer, OpenFlowSwitch sw, int interval) {
+  public FlexcommStatisticsCollector(Timer timer, OpenFlowSwitch sw, int interval) {
     this.timer = timer;
     this.sw = checkNotNull(sw, "Null switch");
     this.refreshInterval = interval;

@@ -5,9 +5,9 @@ import java.util.Collection;
 import org.onosproject.net.DeviceId;
 import org.onosproject.store.Store;
 
-public interface FlexcommStore extends Store<FlexcommEvent, FlexcommStoreDelegate> {
+public interface FlexcommStatisticsStore extends Store<FlexcommStatisticsEvent, FlexcommStatisticsStoreDelegate> {
 
-  FlexcommEvent updateGlobalStatistics(DeviceId deviceId, GlobalStatistics globalStatistics);
+  FlexcommStatisticsEvent updateGlobalStatistics(DeviceId deviceId, GlobalStatistics globalStatistics);
   // FlexcommEvent updatePortStatistics(DeviceId deviceId,
   // Collection<PortStatistics> portStatistics);
 

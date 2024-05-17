@@ -6,14 +6,14 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.inesctec.flexcomm.ofexp.api.FlexcommEvent;
-import org.inesctec.flexcomm.ofexp.api.FlexcommListener;
-import org.inesctec.flexcomm.ofexp.api.FlexcommProvider;
-import org.inesctec.flexcomm.ofexp.api.FlexcommProviderRegistry;
-import org.inesctec.flexcomm.ofexp.api.FlexcommProviderService;
-import org.inesctec.flexcomm.ofexp.api.FlexcommService;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStore;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStoreDelegate;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsListener;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProvider;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProviderRegistry;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProviderService;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsService;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStore;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStoreDelegate;
 import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
 import org.onlab.util.Tools;
 import org.onosproject.cfg.ComponentConfigService;
@@ -44,26 +44,27 @@ import static org.onlab.util.Tools.groupedThreads;
 
 // TODO: Add port stats
 @Component(immediate = true, service = {
-    FlexcommService.class,
-    FlexcommProviderRegistry.class
+    FlexcommStatisticsService.class,
+    FlexcommStatisticsProviderRegistry.class
 }, property = {
     FM_PURGE_ON_DISCONNECTION + ":Boolean=" + FM_PURGE_ON_DISCONNECTION_DEFAULT
 })
-public class FlexcommManager
-    extends AbstractListenerProviderRegistry<FlexcommEvent, FlexcommListener, FlexcommProvider, FlexcommProviderService>
-    implements FlexcommService, FlexcommProviderRegistry {
+public class FlexcommStatisticsManager
+    extends
+    AbstractListenerProviderRegistry<FlexcommStatisticsEvent, FlexcommStatisticsListener, FlexcommStatisticsProvider, FlexcommStatisticsProviderService>
+    implements FlexcommStatisticsService, FlexcommStatisticsProviderRegistry {
 
   public static final String DEVICE_ID_NULL = "Device ID cannot be null";
 
   private final Logger log = getLogger(getClass());
 
-  private final FlexcommStoreDelegate delegate = new InternalFlexcommStoreDelegate();
+  private final FlexcommStatisticsStoreDelegate delegate = new InternalFlexcommStoreDelegate();
   private final DeviceListener deviceListener = new InternalDeviceListener();
 
   private ExecutorService eventExecutor;
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY)
-  protected FlexcommStore store;
+  protected FlexcommStatisticsStore store;
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY)
   protected DeviceService deviceService;
@@ -80,7 +81,7 @@ public class FlexcommManager
   public void activate(ComponentContext context) {
     eventExecutor = Executors.newSingleThreadExecutor(groupedThreads("onos/flexcomm/stats", "event"));
     store.setDelegate(delegate);
-    eventDispatcher.addSink(FlexcommEvent.class, listenerRegistry);
+    eventDispatcher.addSink(FlexcommStatisticsEvent.class, listenerRegistry);
     deviceService.addListener(deviceListener);
     cfgService.registerProperties(getClass());
     modified(context);
@@ -94,7 +95,7 @@ public class FlexcommManager
     deviceService.removeListener(deviceListener);
     cfgService.unregisterProperties(getClass(), false);
     store.unsetDelegate(delegate);
-    eventDispatcher.removeSink(FlexcommEvent.class);
+    eventDispatcher.removeSink(FlexcommStatisticsEvent.class);
     log.info("Stopped");
   }
 
@@ -141,23 +142,23 @@ public class FlexcommManager
   }
 
   @Override
-  protected FlexcommProviderService createProviderService(FlexcommProvider provider) {
+  protected FlexcommStatisticsProviderService createProviderService(FlexcommStatisticsProvider provider) {
     return new InternalFlexcommProviderService(provider);
   }
 
-  private class InternalFlexcommStoreDelegate implements FlexcommStoreDelegate {
+  private class InternalFlexcommStoreDelegate implements FlexcommStatisticsStoreDelegate {
 
     @Override
-    public void notify(FlexcommEvent event) {
+    public void notify(FlexcommStatisticsEvent event) {
       post(event);
     }
 
   }
 
-  private class InternalFlexcommProviderService extends AbstractProviderService<FlexcommProvider>
-      implements FlexcommProviderService {
+  private class InternalFlexcommProviderService extends AbstractProviderService<FlexcommStatisticsProvider>
+      implements FlexcommStatisticsProviderService {
 
-    InternalFlexcommProviderService(FlexcommProvider provider) {
+    InternalFlexcommProviderService(FlexcommStatisticsProvider provider) {
       super(provider);
     }
 
@@ -167,7 +168,7 @@ public class FlexcommManager
       checkNotNull(globalStatistics, "Global statistics cannot be null");
       checkValidity();
 
-      FlexcommEvent event = store.updateGlobalStatistics(deviceId, globalStatistics);
+      FlexcommStatisticsEvent event = store.updateGlobalStatistics(deviceId, globalStatistics);
       post(event);
     }
 

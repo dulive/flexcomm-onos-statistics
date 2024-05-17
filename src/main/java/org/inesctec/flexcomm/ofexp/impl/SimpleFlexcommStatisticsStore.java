@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
 
 import org.inesctec.flexcomm.ofexp.api.DefaultGlobalStatistics;
-import org.inesctec.flexcomm.ofexp.api.FlexcommEvent;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStore;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStoreDelegate;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStore;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStoreDelegate;
 import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
-import org.inesctec.flexcomm.ofexp.api.FlexcommEvent.Type;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent.Type;
 import org.onosproject.net.DeviceId;
 import org.onosproject.store.AbstractStore;
 import org.osgi.service.component.annotations.Activate;
@@ -22,7 +22,8 @@ import com.google.common.collect.Maps;
 import static org.slf4j.LoggerFactory.getLogger;
 
 //@Component(immediate = true, service = FlexcommStore.class)
-public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommStoreDelegate> implements FlexcommStore {
+public class SimpleFlexcommStatisticsStore
+    extends AbstractStore<FlexcommStatisticsEvent, FlexcommStatisticsStoreDelegate> implements FlexcommStatisticsStore {
 
   private final Logger log = getLogger(getClass());
 
@@ -42,7 +43,7 @@ public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommSt
   }
 
   @Override
-  public FlexcommEvent updateGlobalStatistics(DeviceId deviceId,
+  public FlexcommStatisticsEvent updateGlobalStatistics(DeviceId deviceId,
       GlobalStatistics globalStatistics) {
     GlobalStatistics prvStats = deviceGlobalStats.get(deviceId);
     GlobalStatistics.Builder builder = DefaultGlobalStatistics.builder();
@@ -54,7 +55,7 @@ public class SimpleFlexcommStore extends AbstractStore<FlexcommEvent, FlexcommSt
     deviceGlobalDeltaStats.put(deviceId, deltaStats);
     deviceGlobalStats.put(deviceId, globalStatistics);
 
-    return new FlexcommEvent(Type.GLOBAL_STATS_UPDATED, globalStatistics);
+    return new FlexcommStatisticsEvent(Type.GLOBAL_STATS_UPDATED, globalStatistics);
   }
 
   @Override

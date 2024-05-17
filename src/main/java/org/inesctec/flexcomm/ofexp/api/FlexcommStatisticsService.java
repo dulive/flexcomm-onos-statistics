@@ -8,7 +8,8 @@ import org.onosproject.event.ListenerService;
 import org.onosproject.net.DeviceId;
 // import org.onosproject.net.PortNumber;
 
-public interface FlexcommService extends ListenerService<FlexcommEvent, FlexcommListener> {
+public interface FlexcommStatisticsService
+    extends ListenerService<FlexcommStatisticsEvent, FlexcommStatisticsListener> {
 
   public Collection<GlobalStatistics> getGlobalStatistics();
 

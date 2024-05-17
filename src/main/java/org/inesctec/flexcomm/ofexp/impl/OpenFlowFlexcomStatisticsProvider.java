@@ -6,9 +6,9 @@ import java.util.Properties;
 import java.util.Timer;
 
 import org.inesctec.flexcomm.ofexp.api.DefaultGlobalStatistics;
-import org.inesctec.flexcomm.ofexp.api.FlexcommProvider;
-import org.inesctec.flexcomm.ofexp.api.FlexcommProviderRegistry;
-import org.inesctec.flexcomm.ofexp.api.FlexcommProviderService;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProvider;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProviderRegistry;
+import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProviderService;
 import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
 import org.onosproject.cfg.ComponentConfigService;
 import org.onosproject.net.DeviceId;
@@ -48,7 +48,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 @Component(immediate = true, property = {
     POLL_FREQ + ":Integer=" + POLL_FREQ_DEFAULT,
 })
-public class OpenFlowFlexcommProvider extends AbstractProvider implements FlexcommProvider {
+public class OpenFlowFlexcomStatisticsProvider extends AbstractProvider implements FlexcommStatisticsProvider {
 
   public static final long FLEXCOMM_EXPERIMENTER = 0xf82aL;
 
@@ -61,9 +61,9 @@ public class OpenFlowFlexcommProvider extends AbstractProvider implements Flexco
   protected OpenFlowController openFlowController;
 
   @Reference(cardinality = ReferenceCardinality.MANDATORY)
-  protected FlexcommProviderRegistry providerRegistry;
+  protected FlexcommStatisticsProviderRegistry providerRegistry;
 
-  private FlexcommProviderService providerService;
+  private FlexcommStatisticsProviderService providerService;
 
   private final InternalFlexcommProvider listener = new InternalFlexcommProvider();
 
@@ -71,9 +71,9 @@ public class OpenFlowFlexcommProvider extends AbstractProvider implements Flexco
 
   private final Timer timer = new Timer("onos-openflow-flexcomm-collector");
 
-  private Map<Dpid, FlexcommStatsCollector> collectors = Maps.newConcurrentMap();
+  private Map<Dpid, FlexcommStatisticsCollector> collectors = Maps.newConcurrentMap();
 
-  public OpenFlowFlexcommProvider() {
+  public OpenFlowFlexcomStatisticsProvider() {
     super(new ProviderId("of", "org.inesctec.provider.flexcomm"));
   }
 
@@ -101,7 +101,7 @@ public class OpenFlowFlexcommProvider extends AbstractProvider implements Flexco
 
     providerRegistry.unregister(this);
 
-    collectors.values().forEach(FlexcommStatsCollector::stop);
+    collectors.values().forEach(FlexcommStatisticsCollector::stop);
     collectors.clear();
 
     providerService = null;
@@ -133,7 +133,7 @@ public class OpenFlowFlexcommProvider extends AbstractProvider implements Flexco
 
     private boolean isDisable = false;
 
-    private void stopCollectorIfNeeded(FlexcommStatsCollector collector) {
+    private void stopCollectorIfNeeded(FlexcommStatisticsCollector collector) {
       if (collector != null) {
         collector.stop();
       }
@@ -162,7 +162,7 @@ public class OpenFlowFlexcommProvider extends AbstractProvider implements Flexco
       }
 
       // TODO: forma de verificar se switch suporta flexcomm stats?
-      FlexcommStatsCollector fsc = new FlexcommStatsCollector(timer, sw, flexcommStatsPollFrequency);
+      FlexcommStatisticsCollector fsc = new FlexcommStatisticsCollector(timer, sw, flexcommStatsPollFrequency);
       stopCollectorIfNeeded(collectors.put(dpid, fsc));
       fsc.start();
 
