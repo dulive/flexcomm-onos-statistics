@@ -1,4 +1,4 @@
-package org.inesctec.flexcomm.ofexp.impl;
+package org.inesctec.flexcomm.statistics.impl;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,13 +40,13 @@ public class FlexcommStatisticsCollector {
   }
 
   public synchronized void start() {
-    log.info("Starting Flexcomm Stats collection thread for {}", sw.getStringId());
+    log.info("Starting Flexcomm Statistics collection thread for {}", sw.getStringId());
     task = new InternalTimerTask();
     timer.scheduleAtFixedRate(task, 1 * SECONDS, refreshInterval * SECONDS);
   }
 
   public synchronized void stop() {
-    log.info("Stopping Flexcomm Stats collection thread for {}", sw.getStringId());
+    log.info("Stopping Flexcomm Statistics collection thread for {}", sw.getStringId());
     task.cancel();
     task = null;
   }
@@ -63,7 +63,7 @@ public class FlexcommStatisticsCollector {
       return;
     }
 
-    log.trace("Collecting stats for {}", sw.getStringId());
+    log.trace("Collecting statistics for {}", sw.getStringId());
 
     // TODO: add flexcomm port stats request
     // try using multipart msg

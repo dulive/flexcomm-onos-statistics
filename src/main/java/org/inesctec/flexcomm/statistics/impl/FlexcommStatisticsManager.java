@@ -1,4 +1,4 @@
-package org.inesctec.flexcomm.ofexp.impl;
+package org.inesctec.flexcomm.statistics.impl;
 
 import java.util.Collection;
 import java.util.Dictionary;
@@ -6,15 +6,15 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsListener;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProvider;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProviderRegistry;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProviderService;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsService;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStore;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStoreDelegate;
-import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsEvent;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsListener;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProvider;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProviderRegistry;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProviderService;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsService;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsStore;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsStoreDelegate;
+import org.inesctec.flexcomm.statistics.api.GlobalStatistics;
 import org.onlab.util.Tools;
 import org.onosproject.cfg.ComponentConfigService;
 import org.onosproject.net.DeviceId;
@@ -34,8 +34,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 
-import static org.inesctec.flexcomm.ofexp.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION;
-import static org.inesctec.flexcomm.ofexp.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION_DEFAULT;
+import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION;
+import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION_DEFAULT;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.onosproject.security.AppGuard.checkPermission;
 import static org.onosproject.security.AppPermission.Type.DEVICE_READ;
@@ -143,7 +143,7 @@ public class FlexcommStatisticsManager
 
   @Override
   protected FlexcommStatisticsProviderService createProviderService(FlexcommStatisticsProvider provider) {
-    return new InternalFlexcommProviderService(provider);
+    return new InternalFlexcommStatisticsProviderService(provider);
   }
 
   private class InternalFlexcommStoreDelegate implements FlexcommStatisticsStoreDelegate {
@@ -155,10 +155,10 @@ public class FlexcommStatisticsManager
 
   }
 
-  private class InternalFlexcommProviderService extends AbstractProviderService<FlexcommStatisticsProvider>
+  private class InternalFlexcommStatisticsProviderService extends AbstractProviderService<FlexcommStatisticsProvider>
       implements FlexcommStatisticsProviderService {
 
-    InternalFlexcommProviderService(FlexcommStatisticsProvider provider) {
+    InternalFlexcommStatisticsProviderService(FlexcommStatisticsProvider provider) {
       super(provider);
     }
 
@@ -194,7 +194,7 @@ public class FlexcommStatisticsManager
                 : purgeOnDisconnection;
             if (purge) {
               log.info("PurgeOnDisconnection is requested for device {}, " +
-                  "removing stats", deviceId);
+                  "removing statistics", deviceId);
               store.purgeStatistics(deviceId);
             }
           }

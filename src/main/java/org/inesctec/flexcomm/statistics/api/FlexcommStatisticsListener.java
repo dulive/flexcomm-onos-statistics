@@ -1,4 +1,4 @@
-package org.inesctec.flexcomm.ofexp.api;
+package org.inesctec.flexcomm.statistics.api;
 
 import org.onosproject.event.EventListener;
 

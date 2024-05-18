@@ -24,20 +24,20 @@
     </parent>
 
     <groupId>org.inesctec.flexcomm</groupId>
-    <artifactId>of-exp</artifactId>
+    <artifactId>statistics</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <description>OpenFlow Flexcomm Statistics extension.</description>
+    <description>Flexcomm Statistics</description>
     <url>http://onosproject.org</url>
 
     <properties>
-        <onos.app.name>org.inesctec.flexcomm.ofexp</onos.app.name>
-        <onos.app.title>OpenFlow Flexcomm Statistics extension.</onos.app.title>
+        <onos.app.name>org.inesctec.flexcomm.statistics</onos.app.name>
+        <onos.app.title>Flexcomm Statistics</onos.app.title>
         <onos.app.origin>INESC TEC</onos.app.origin>
         <onos.app.category>default</onos.app.category>
         <onos.app.url>http://onosproject.org</onos.app.url>
-        <onos.app.readme>OpenFlow Flexcomm Statistics extension.</onos.app.readme>
+        <onos.app.readme>Flexcomm Statistics</onos.app.readme>
         <onos.app.requires>org.onosproject.openflow-base</onos.app.requires>
     </properties>
 

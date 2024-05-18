@@ -17,4 +17,4 @@
 /**
  * ONOS application archetype.
  */
-package org.inesctec.flexcomm.ofexp;
+package org.inesctec.flexcomm.statistics;

@@ -1,15 +1,15 @@
-package org.inesctec.flexcomm.ofexp.impl;
+package org.inesctec.flexcomm.statistics.impl;
 
 import java.util.Dictionary;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 
-import org.inesctec.flexcomm.ofexp.api.DefaultGlobalStatistics;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProvider;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProviderRegistry;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsProviderService;
-import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.DefaultGlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProvider;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProviderRegistry;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProviderService;
+import org.inesctec.flexcomm.statistics.api.GlobalStatistics;
 import org.onosproject.cfg.ComponentConfigService;
 import org.onosproject.net.DeviceId;
 import org.onosproject.net.provider.AbstractProvider;
@@ -40,8 +40,8 @@ import org.slf4j.Logger;
 import com.google.common.collect.Maps;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.inesctec.flexcomm.ofexp.impl.OsgiPropertyConstants.POLL_FREQ;
-import static org.inesctec.flexcomm.ofexp.impl.OsgiPropertyConstants.POLL_FREQ_DEFAULT;
+import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.POLL_FREQ;
+import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.POLL_FREQ_DEFAULT;
 import static org.onlab.util.Tools.get;
 import static com.google.common.base.Strings.isNullOrEmpty;
 

@@ -1,17 +1,17 @@
-package org.inesctec.flexcomm.ofexp.impl;
+package org.inesctec.flexcomm.statistics.impl;
 
-import static org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent.Type.GLOBAL_STATS_UPDATED;
+import static org.inesctec.flexcomm.statistics.api.FlexcommStatisticsEvent.Type.GLOBAL_STATS_UPDATED;
 import static org.onosproject.store.service.EventuallyConsistentMapEvent.Type.PUT;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-import org.inesctec.flexcomm.ofexp.api.DefaultGlobalStatistics;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStore;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStoreDelegate;
-import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.DefaultGlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsEvent;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsStore;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsStoreDelegate;
+import org.inesctec.flexcomm.statistics.api.GlobalStatistics;
 import org.onlab.util.KryoNamespace;
 import org.onosproject.net.DeviceId;
 import org.onosproject.store.AbstractStore;

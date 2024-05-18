@@ -1,14 +1,14 @@
-package org.inesctec.flexcomm.ofexp.impl;
+package org.inesctec.flexcomm.statistics.impl;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
 
-import org.inesctec.flexcomm.ofexp.api.DefaultGlobalStatistics;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStore;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsStoreDelegate;
-import org.inesctec.flexcomm.ofexp.api.GlobalStatistics;
-import org.inesctec.flexcomm.ofexp.api.FlexcommStatisticsEvent.Type;
+import org.inesctec.flexcomm.statistics.api.DefaultGlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsEvent;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsStore;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsStoreDelegate;
+import org.inesctec.flexcomm.statistics.api.GlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsEvent.Type;
 import org.onosproject.net.DeviceId;
 import org.onosproject.store.AbstractStore;
 import org.osgi.service.component.annotations.Activate;
