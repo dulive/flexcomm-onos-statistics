@@ -1,7 +1,16 @@
 package org.inesctec.flexcomm.statistics.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION;
+import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION_DEFAULT;
+import static org.onlab.util.Tools.groupedThreads;
+import static org.onosproject.security.AppGuard.checkPermission;
+import static org.onosproject.security.AppPermission.Type.DEVICE_READ;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.Collection;
 import java.util.Dictionary;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,9 +24,11 @@ import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsService;
 import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsStore;
 import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsStoreDelegate;
 import org.inesctec.flexcomm.statistics.api.GlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.PortStatistics;
 import org.onlab.util.Tools;
 import org.onosproject.cfg.ComponentConfigService;
 import org.onosproject.net.DeviceId;
+import org.onosproject.net.PortNumber;
 import org.onosproject.net.config.NetworkConfigRegistry;
 import org.onosproject.net.config.basics.BasicDeviceConfig;
 import org.onosproject.net.device.DeviceEvent;
@@ -34,15 +45,6 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 
-import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION;
-import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.FM_PURGE_ON_DISCONNECTION_DEFAULT;
-import static org.slf4j.LoggerFactory.getLogger;
-import static org.onosproject.security.AppGuard.checkPermission;
-import static org.onosproject.security.AppPermission.Type.DEVICE_READ;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.onlab.util.Tools.groupedThreads;
-
-// TODO: Add port stats
 @Component(immediate = true, service = {
     FlexcommStatisticsService.class,
     FlexcommStatisticsProviderRegistry.class
@@ -55,6 +57,7 @@ public class FlexcommStatisticsManager
     implements FlexcommStatisticsService, FlexcommStatisticsProviderRegistry {
 
   public static final String DEVICE_ID_NULL = "Device ID cannot be null";
+  public static final String PORT_NUMBER_NULL = "Port number cannot be null";
 
   private final Logger log = getLogger(getClass());
 
@@ -116,13 +119,13 @@ public class FlexcommStatisticsManager
   }
 
   @Override
-  public Collection<GlobalStatistics> getGlobalStatistics() {
+  public List<GlobalStatistics> getGlobalStatistics() {
     checkPermission(DEVICE_READ);
     return store.getGlobalStatistics();
   }
 
   @Override
-  public Collection<GlobalStatistics> getGlobalDeltaStatistics() {
+  public List<GlobalStatistics> getGlobalDeltaStatistics() {
     checkPermission(DEVICE_READ);
     return store.getGlobalDeltaStatistics();
   }
@@ -139,6 +142,48 @@ public class FlexcommStatisticsManager
     checkPermission(DEVICE_READ);
     checkNotNull(deviceId, DEVICE_ID_NULL);
     return store.getGlobalDeltaStatistics(deviceId);
+  }
+
+  @Override
+  public List<PortStatistics> getPortStatistics() {
+    checkPermission(DEVICE_READ);
+    return store.getPortStatistics();
+  }
+
+  @Override
+  public List<PortStatistics> getPortDeltaStatistics() {
+    checkPermission(DEVICE_READ);
+    return store.getPortStatistics();
+  }
+
+  @Override
+  public List<PortStatistics> getPortStatistics(DeviceId deviceId) {
+    checkPermission(DEVICE_READ);
+    checkNotNull(deviceId, DEVICE_ID_NULL);
+    return store.getPortStatistics(deviceId);
+  }
+
+  @Override
+  public List<PortStatistics> getPortDeltaStatistics(DeviceId deviceId) {
+    checkPermission(DEVICE_READ);
+    checkNotNull(deviceId, DEVICE_ID_NULL);
+    return store.getPortDeltaStatistics(deviceId);
+  }
+
+  @Override
+  public PortStatistics getStatisticsForPort(DeviceId deviceId, PortNumber portNumber) {
+    checkPermission(DEVICE_READ);
+    checkNotNull(deviceId, DEVICE_ID_NULL);
+    checkNotNull(portNumber, PORT_NUMBER_NULL);
+    return store.getStatisticsForPort(deviceId, portNumber);
+  }
+
+  @Override
+  public PortStatistics getDeltaStatisticsForPort(DeviceId deviceId, PortNumber portNumber) {
+    checkPermission(DEVICE_READ);
+    checkNotNull(deviceId, DEVICE_ID_NULL);
+    checkNotNull(portNumber, PORT_NUMBER_NULL);
+    return store.getDeltaStatisticsForPort(deviceId, portNumber);
   }
 
   @Override
@@ -169,6 +214,16 @@ public class FlexcommStatisticsManager
       checkValidity();
 
       FlexcommStatisticsEvent event = store.updateGlobalStatistics(deviceId, globalStatistics);
+      post(event);
+    }
+
+    @Override
+    public void updatePortStatistics(DeviceId deviceId, Collection<PortStatistics> portStatistics) {
+      checkNotNull(deviceId, DEVICE_ID_NULL);
+      checkNotNull(portStatistics, "Port statistics list cannot be null");
+      checkValidity();
+
+      FlexcommStatisticsEvent event = store.updatePortStatistics(deviceId, portStatistics);
       post(event);
     }
 

@@ -1,17 +1,31 @@
 package org.inesctec.flexcomm.statistics.impl;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.POLL_FREQ;
+import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.POLL_FREQ_DEFAULT;
+import static org.onlab.util.Tools.get;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 
 import org.inesctec.flexcomm.statistics.api.DefaultGlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.DefaultPortStatistics;
 import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProvider;
 import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProviderRegistry;
 import org.inesctec.flexcomm.statistics.api.FlexcommStatisticsProviderService;
 import org.inesctec.flexcomm.statistics.api.GlobalStatistics;
+import org.inesctec.flexcomm.statistics.api.PortStatistics;
 import org.onosproject.cfg.ComponentConfigService;
 import org.onosproject.net.DeviceId;
+import org.onosproject.net.PortNumber;
 import org.onosproject.net.provider.AbstractProvider;
 import org.onosproject.net.provider.ProviderId;
 import org.onosproject.openflow.controller.Dpid;
@@ -29,21 +43,21 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.projectfloodlight.openflow.protocol.OFExperimenterStatsReply;
 import org.projectfloodlight.openflow.protocol.OFFlexcommGlobalEnergyReply;
+import org.projectfloodlight.openflow.protocol.OFFlexcommPortEnergyReply;
+import org.projectfloodlight.openflow.protocol.OFFlexcommPortStatsEntry;
 import org.projectfloodlight.openflow.protocol.OFFlexcommStatsReply;
 import org.projectfloodlight.openflow.protocol.OFFlexcommSubtype;
 import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPortStatus;
 import org.projectfloodlight.openflow.protocol.OFStatsReply;
+import org.projectfloodlight.openflow.protocol.OFStatsReplyFlags;
 import org.projectfloodlight.openflow.protocol.OFStatsType;
 import org.slf4j.Logger;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import static org.slf4j.LoggerFactory.getLogger;
-import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.POLL_FREQ;
-import static org.inesctec.flexcomm.statistics.impl.OsgiPropertyConstants.POLL_FREQ_DEFAULT;
-import static org.onlab.util.Tools.get;
-import static com.google.common.base.Strings.isNullOrEmpty;
+import com.google.common.collect.Sets;
 
 @Component(immediate = true, property = {
     POLL_FREQ + ":Integer=" + POLL_FREQ_DEFAULT,
@@ -129,8 +143,37 @@ public class OpenFlowFlexcomStatisticsProvider extends AbstractProvider implemen
     log.info("Settings: flexcommStatsPollFrequency={}", flexcommStatsPollFrequency);
   }
 
+  private void pushPortMetrics(Dpid dpid, List<OFFlexcommPortStatsEntry> portStatsEntries) {
+    DeviceId deviceId = DeviceId.deviceId(Dpid.uri(dpid));
+    Collection<PortStatistics> stats = buildPortStatistics(deviceId, ImmutableList.copyOf(portStatsEntries));
+    providerService.updatePortStatistics(deviceId, stats);
+  }
+
+  private Collection<PortStatistics> buildPortStatistics(DeviceId deviceId, List<OFFlexcommPortStatsEntry> entries) {
+    HashSet<PortStatistics> stats = Sets.newHashSet();
+
+    for (OFFlexcommPortStatsEntry entry : entries) {
+      if (entry == null || entry.getPortNo() == null || entry.getPortNo().getPortNumber() < 0) {
+        continue;
+      }
+
+      double currentConsumption = Double.longBitsToDouble(entry.getCurrentConsumption().getValue());
+      double powerDrawn = Double.longBitsToDouble(entry.getPowerDrawn().getValue());
+
+      PortStatistics.Builder builder = DefaultPortStatistics.builder();
+      PortStatistics portStats = builder.setDeviceId(deviceId)
+          .setPortNumber(PortNumber.portNumber(entry.getPortNo().getPortNumber()))
+          .setCurrentConsumption(currentConsumption).setPowerDrawn(powerDrawn).build();
+
+      stats.add(portStats);
+    }
+
+    return Collections.unmodifiableSet(stats);
+  }
+
   private class InternalFlexcommProvider implements OpenFlowSwitchListener, OpenFlowEventListener {
 
+    private HashMap<Dpid, List<OFFlexcommPortStatsEntry>> portStatsReplies = new HashMap<>();
     private boolean isDisable = false;
 
     private void stopCollectorIfNeeded(FlexcommStatisticsCollector collector) {
@@ -161,7 +204,6 @@ public class OpenFlowFlexcomStatisticsProvider extends AbstractProvider implemen
         return;
       }
 
-      // TODO: forma de verificar se switch suporta flexcomm stats?
       FlexcommStatisticsCollector fsc = new FlexcommStatisticsCollector(timer, sw, flexcommStatsPollFrequency);
       stopCollectorIfNeeded(collectors.put(dpid, fsc));
       fsc.start();
@@ -195,11 +237,11 @@ public class OpenFlowFlexcomStatisticsProvider extends AbstractProvider implemen
               OFFlexcommStatsReply flexcommStatsReply = (OFFlexcommStatsReply) msg;
 
               if (flexcommStatsReply.getSubtype() == OFFlexcommSubtype.GLOBAL_ENERGY.ordinal()) {
-                OFFlexcommGlobalEnergyReply flexcommGlobalEnergyReply = (OFFlexcommGlobalEnergyReply) msg;
+                OFFlexcommGlobalEnergyReply globalEnergyReply = (OFFlexcommGlobalEnergyReply) msg;
                 double currentConsumption = Double
-                    .longBitsToDouble(flexcommGlobalEnergyReply.getCurrentConsumption().getValue());
+                    .longBitsToDouble(globalEnergyReply.getCurrentConsumption().getValue());
                 double powerDrawn = Double
-                    .longBitsToDouble(flexcommGlobalEnergyReply.getPowerDrawn().getValue());
+                    .longBitsToDouble(globalEnergyReply.getPowerDrawn().getValue());
                 DeviceId deviceId = DeviceId.deviceId(Dpid.uri(dpid));
                 GlobalStatistics.Builder builder = DefaultGlobalStatistics.builder();
                 GlobalStatistics stats = builder.setDeviceId(deviceId)
@@ -209,9 +251,28 @@ public class OpenFlowFlexcomStatisticsProvider extends AbstractProvider implemen
                 providerService.updateGlobalStatistics(deviceId, stats);
 
               } else if (flexcommStatsReply.getSubtype() == OFFlexcommSubtype.PORT_ENERGY.ordinal()) {
-                // TODO: handle port energy reply
+                OFFlexcommPortEnergyReply portEnergyReply = (OFFlexcommPortEnergyReply) msg;
+                List<OFFlexcommPortStatsEntry> portStatsReplyList = portStatsReplies.get(dpid);
+                if (portStatsReplyList == null) {
+                  portStatsReplyList = Lists.newCopyOnWriteArrayList();
+                }
+                portStatsReplyList.addAll(portEnergyReply.getEntries());
+                portStatsReplies.put(dpid, portStatsReplyList);
+                if (!portEnergyReply.getFlags().contains(OFStatsReplyFlags.REPLY_MORE)) {
+                  List<OFFlexcommPortStatsEntry> statsEntries = portStatsReplies.get(dpid);
+                  if (statsEntries != null) {
+                    pushPortMetrics(dpid, statsEntries);
+                    statsEntries.clear();
+                  }
+                }
               }
             }
+            break;
+          case ERROR:
+            // TODO: forma de verificar se switch suporta flexcomm stats?
+            // se receber error considerar que nao suporta e parar collector
+            // type -> OFErrorType.BAD_REQUEST
+            // code -> OFBadActionCode.BAD_EXPERIMENTER
             break;
           default:
             break;

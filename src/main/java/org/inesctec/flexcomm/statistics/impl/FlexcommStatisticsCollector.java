@@ -1,5 +1,9 @@
 package org.inesctec.flexcomm.statistics.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
@@ -7,10 +11,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.onosproject.openflow.controller.OpenFlowSwitch;
 import org.onosproject.openflow.controller.RoleState;
 import org.projectfloodlight.openflow.protocol.OFFlexcommGlobalEnergyRequest;
+import org.projectfloodlight.openflow.protocol.OFFlexcommPortEnergyRequest;
+import org.projectfloodlight.openflow.protocol.OFMessage;
+import org.projectfloodlight.openflow.types.OFPort;
 import org.slf4j.Logger;
 
-import static org.slf4j.LoggerFactory.getLogger;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.Lists;
 
 public class FlexcommStatisticsCollector {
 
@@ -65,12 +71,18 @@ public class FlexcommStatisticsCollector {
 
     log.trace("Collecting statistics for {}", sw.getStringId());
 
-    // TODO: add flexcomm port stats request
-    // try using multipart msg
+    List<OFMessage> statsRequests = Lists.newArrayList();
     Long statsXid = xidAtomic.getAndIncrement();
-    OFFlexcommGlobalEnergyRequest statsRequest = sw.factory().buildFlexcommGlobalEnergyRequest().setXid(statsXid)
+    OFFlexcommGlobalEnergyRequest globalStatsRequest = sw.factory().buildFlexcommGlobalEnergyRequest().setXid(statsXid)
         .build();
-    sw.sendMsg(statsRequest);
+    statsRequests.add(globalStatsRequest);
+
+    statsXid = xidAtomic.getAndIncrement();
+    OFFlexcommPortEnergyRequest portStatsRequest = sw.factory().buildFlexcommPortEnergyRequest().setXid(statsXid)
+        .setPortNo(OFPort.ANY).build();
+
+    statsRequests.add(portStatsRequest);
+    sw.sendMsg(statsRequests);
   }
 
 }
