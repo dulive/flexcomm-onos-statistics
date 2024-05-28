@@ -41,7 +41,11 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.projectfloodlight.openflow.protocol.OFBadRequestCode;
+import org.projectfloodlight.openflow.protocol.OFErrorMsg;
+import org.projectfloodlight.openflow.protocol.OFErrorType;
 import org.projectfloodlight.openflow.protocol.OFExperimenterStatsReply;
+import org.projectfloodlight.openflow.protocol.OFExperimenterStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFFlexcommGlobalEnergyReply;
 import org.projectfloodlight.openflow.protocol.OFFlexcommPortEnergyReply;
 import org.projectfloodlight.openflow.protocol.OFFlexcommPortStatsEntry;
@@ -51,7 +55,10 @@ import org.projectfloodlight.openflow.protocol.OFMessage;
 import org.projectfloodlight.openflow.protocol.OFPortStatus;
 import org.projectfloodlight.openflow.protocol.OFStatsReply;
 import org.projectfloodlight.openflow.protocol.OFStatsReplyFlags;
+import org.projectfloodlight.openflow.protocol.OFStatsRequest;
 import org.projectfloodlight.openflow.protocol.OFStatsType;
+import org.projectfloodlight.openflow.protocol.OFType;
+import org.projectfloodlight.openflow.protocol.errormsg.OFBadRequestErrorMsg;
 import org.slf4j.Logger;
 
 import com.google.common.collect.ImmutableList;
@@ -269,10 +276,18 @@ public class OpenFlowFlexcomStatisticsProvider extends AbstractProvider implemen
             }
             break;
           case ERROR:
-            // TODO: forma de verificar se switch suporta flexcomm stats?
-            // se receber error considerar que nao suporta e parar collector
-            // type -> OFErrorType.BAD_REQUEST
-            // code -> OFBadActionCode.BAD_EXPERIMENTER
+            if (((OFErrorMsg) msg).getErrType() == OFErrorType.BAD_REQUEST) {
+              OFBadRequestErrorMsg badRequest = (OFBadRequestErrorMsg) msg;
+              if (badRequest.getCode() == OFBadRequestCode.BAD_EXPERIMENTER
+                  && badRequest.getData().getParsedMessage().isPresent()) {
+                OFMessage ofMessage = badRequest.getData().getParsedMessage().get();
+                if (ofMessage.getType() == OFType.STATS_REQUEST
+                    && ((OFStatsRequest) ofMessage).getStatsType() == OFStatsType.EXPERIMENTER
+                    && ((OFExperimenterStatsRequest) ofMessage).getExperimenter() == FLEXCOMM_EXPERIMENTER) {
+                  stopCollectorIfNeeded(collectors.remove(dpid));
+                }
+              }
+            }
             break;
           default:
             break;
