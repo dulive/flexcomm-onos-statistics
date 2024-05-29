@@ -4,11 +4,8 @@ import static org.onosproject.net.DefaultAnnotations.EMPTY;
 
 import org.onosproject.net.Annotated;
 import org.onosproject.net.Annotations;
-import org.onosproject.net.DeviceId;
 
 public interface GlobalStatistics extends Annotated {
-
-  DeviceId deviceId();
 
   double currentConsumption();
 
@@ -20,8 +17,6 @@ public interface GlobalStatistics extends Annotated {
   }
 
   interface Builder {
-
-    Builder setDeviceId(DeviceId deviceId);
 
     Builder setCurrentConsumption(double currentConsumption);
 

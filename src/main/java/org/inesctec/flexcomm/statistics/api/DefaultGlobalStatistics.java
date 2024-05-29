@@ -29,11 +29,6 @@ public final class DefaultGlobalStatistics extends AbstractAnnotated implements 
   }
 
   @Override
-  public DeviceId deviceId() {
-    return this.deviceId;
-  }
-
-  @Override
   public double currentConsumption() {
     return this.currentConsumption;
   }
@@ -54,7 +49,6 @@ public final class DefaultGlobalStatistics extends AbstractAnnotated implements 
 
     }
 
-    @Override
     public GlobalStatistics.Builder setDeviceId(DeviceId deviceId) {
       this.deviceId = deviceId;
 

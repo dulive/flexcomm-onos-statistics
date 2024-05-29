@@ -4,12 +4,9 @@ import static org.onosproject.net.DefaultAnnotations.EMPTY;
 
 import org.onosproject.net.Annotated;
 import org.onosproject.net.Annotations;
-import org.onosproject.net.DeviceId;
 import org.onosproject.net.PortNumber;
 
 public interface PortStatistics extends Annotated {
-
-  DeviceId deviceId();
 
   PortNumber portNumber();
 
@@ -23,8 +20,6 @@ public interface PortStatistics extends Annotated {
   }
 
   interface Builder {
-
-    Builder setDeviceId(DeviceId deviceId);
 
     Builder setPortNumber(PortNumber portNumber);
 

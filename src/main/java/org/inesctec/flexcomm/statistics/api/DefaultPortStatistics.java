@@ -33,11 +33,6 @@ public final class DefaultPortStatistics extends AbstractAnnotated implements Po
   }
 
   @Override
-  public DeviceId deviceId() {
-    return this.deviceId;
-  }
-
-  @Override
   public PortNumber portNumber() {
     return this.portNumber;
   }
@@ -64,7 +59,6 @@ public final class DefaultPortStatistics extends AbstractAnnotated implements Po
 
     }
 
-    @Override
     public PortStatistics.Builder setDeviceId(DeviceId deviceId) {
       this.deviceId = deviceId;
 

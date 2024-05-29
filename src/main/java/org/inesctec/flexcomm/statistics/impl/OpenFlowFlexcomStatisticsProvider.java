@@ -168,8 +168,7 @@ public class OpenFlowFlexcomStatisticsProvider extends AbstractProvider implemen
       double powerDrawn = Double.longBitsToDouble(entry.getPowerDrawn().getValue());
 
       PortStatistics.Builder builder = DefaultPortStatistics.builder();
-      PortStatistics portStats = builder.setDeviceId(deviceId)
-          .setPortNumber(PortNumber.portNumber(entry.getPortNo().getPortNumber()))
+      PortStatistics portStats = builder.setPortNumber(PortNumber.portNumber(entry.getPortNo().getPortNumber()))
           .setCurrentConsumption(currentConsumption).setPowerDrawn(powerDrawn).build();
 
       stats.add(portStats);
@@ -251,8 +250,7 @@ public class OpenFlowFlexcomStatisticsProvider extends AbstractProvider implemen
                     .longBitsToDouble(globalEnergyReply.getPowerDrawn().getValue());
                 DeviceId deviceId = DeviceId.deviceId(Dpid.uri(dpid));
                 GlobalStatistics.Builder builder = DefaultGlobalStatistics.builder();
-                GlobalStatistics stats = builder.setDeviceId(deviceId)
-                    .setCurrentConsumption(currentConsumption)
+                GlobalStatistics stats = builder.setCurrentConsumption(currentConsumption)
                     .setPowerDrawn(powerDrawn)
                     .build();
                 providerService.updateGlobalStatistics(deviceId, stats);

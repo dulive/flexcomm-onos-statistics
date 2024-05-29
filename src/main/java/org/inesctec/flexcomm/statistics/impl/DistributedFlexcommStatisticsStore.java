@@ -131,7 +131,7 @@ public class DistributedFlexcommStatisticsStore
   private GlobalStatistics calcGlobalDeltaStats(DeviceId deviceId, GlobalStatistics prvStats,
       GlobalStatistics newStats) {
     GlobalStatistics.Builder builder = DefaultGlobalStatistics.builder();
-    GlobalStatistics deltaStats = builder.setDeviceId(deviceId)
+    GlobalStatistics deltaStats = builder
         .setCurrentConsumption(newStats.currentConsumption() - prvStats.currentConsumption())
         .setPowerDrawn(newStats.powerDrawn() - prvStats.powerDrawn()).build();
     return deltaStats;
@@ -172,8 +172,7 @@ public class DistributedFlexcommStatisticsStore
   private PortStatistics calcPortDeltaStats(DeviceId deviceId, PortStatistics prvStats,
       PortStatistics newStats) {
     PortStatistics.Builder builder = DefaultPortStatistics.builder();
-    PortStatistics deltaStats = builder.setDeviceId(deviceId)
-        .setPortNumber(newStats.portNumber())
+    PortStatistics deltaStats = builder.setPortNumber(newStats.portNumber())
         .setCurrentConsumption(newStats.currentConsumption() - prvStats.currentConsumption())
         .setPowerDrawn(newStats.powerDrawn() - prvStats.powerDrawn())
         .build();
