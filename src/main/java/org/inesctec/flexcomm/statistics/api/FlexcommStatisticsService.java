@@ -9,17 +9,9 @@ import org.onosproject.net.PortNumber;
 public interface FlexcommStatisticsService
     extends ListenerService<FlexcommStatisticsEvent, FlexcommStatisticsListener> {
 
-  public List<GlobalStatistics> getGlobalStatistics();
-
-  public List<GlobalStatistics> getGlobalDeltaStatistics();
-
   public GlobalStatistics getGlobalStatistics(DeviceId deviceId);
 
   public GlobalStatistics getGlobalDeltaStatistics(DeviceId deviceId);
-
-  public List<PortStatistics> getPortStatistics();
-
-  public List<PortStatistics> getPortDeltaStatistics();
 
   public List<PortStatistics> getPortStatistics(DeviceId deviceId);
 

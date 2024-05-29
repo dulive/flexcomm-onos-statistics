@@ -181,37 +181,13 @@ public class DistributedFlexcommStatisticsStore
   }
 
   @Override
-  public List<GlobalStatistics> getGlobalStatistics() {
-    return ImmutableList.copyOf(deviceGlobalStats.values());
-  }
-
-  @Override
   public GlobalStatistics getGlobalStatistics(DeviceId deviceId) {
     return deviceGlobalStats.get(deviceId);
   }
 
   @Override
-  public List<GlobalStatistics> getGlobalDeltaStatistics() {
-    return ImmutableList.copyOf(deviceGlobalDeltaStats.values());
-  }
-
-  @Override
   public GlobalStatistics getGlobalDeltaStatistics(DeviceId deviceId) {
     return deviceGlobalDeltaStats.get(deviceId);
-  }
-
-  @Override
-  public List<PortStatistics> getPortStatistics() {
-    ImmutableList.Builder<PortStatistics> builder = ImmutableList.builder();
-    devicePortStats.values().forEach(portStats -> builder.addAll(portStats.values()));
-    return builder.build();
-  }
-
-  @Override
-  public List<PortStatistics> getPortDeltaStatistics() {
-    ImmutableList.Builder<PortStatistics> builder = ImmutableList.builder();
-    devicePortDeltaStats.values().forEach(portStats -> builder.addAll(portStats.values()));
-    return builder.build();
   }
 
   @Override

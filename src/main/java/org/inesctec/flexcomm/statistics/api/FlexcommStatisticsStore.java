@@ -13,17 +13,9 @@ public interface FlexcommStatisticsStore extends Store<FlexcommStatisticsEvent, 
 
   FlexcommStatisticsEvent updatePortStatistics(DeviceId deviceId, Collection<PortStatistics> portStatistics);
 
-  List<GlobalStatistics> getGlobalStatistics();
-
-  List<GlobalStatistics> getGlobalDeltaStatistics();
-
   GlobalStatistics getGlobalStatistics(DeviceId deviceId);
 
   GlobalStatistics getGlobalDeltaStatistics(DeviceId deviceId);
-
-  List<PortStatistics> getPortStatistics();
-
-  List<PortStatistics> getPortDeltaStatistics();
 
   List<PortStatistics> getPortStatistics(DeviceId deviceId);
 

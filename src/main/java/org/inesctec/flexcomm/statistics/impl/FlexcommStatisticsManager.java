@@ -119,18 +119,6 @@ public class FlexcommStatisticsManager
   }
 
   @Override
-  public List<GlobalStatistics> getGlobalStatistics() {
-    checkPermission(DEVICE_READ);
-    return store.getGlobalStatistics();
-  }
-
-  @Override
-  public List<GlobalStatistics> getGlobalDeltaStatistics() {
-    checkPermission(DEVICE_READ);
-    return store.getGlobalDeltaStatistics();
-  }
-
-  @Override
   public GlobalStatistics getGlobalStatistics(DeviceId deviceId) {
     checkPermission(DEVICE_READ);
     checkNotNull(deviceId, DEVICE_ID_NULL);
@@ -142,18 +130,6 @@ public class FlexcommStatisticsManager
     checkPermission(DEVICE_READ);
     checkNotNull(deviceId, DEVICE_ID_NULL);
     return store.getGlobalDeltaStatistics(deviceId);
-  }
-
-  @Override
-  public List<PortStatistics> getPortStatistics() {
-    checkPermission(DEVICE_READ);
-    return store.getPortStatistics();
-  }
-
-  @Override
-  public List<PortStatistics> getPortDeltaStatistics() {
-    checkPermission(DEVICE_READ);
-    return store.getPortStatistics();
   }
 
   @Override
