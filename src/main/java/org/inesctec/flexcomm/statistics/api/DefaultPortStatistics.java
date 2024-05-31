@@ -47,6 +47,20 @@ public final class DefaultPortStatistics extends AbstractAnnotated implements Po
     return this.powerDrawn;
   }
 
+  @Override
+  public boolean isZero() {
+    return currentConsumption() == 0 && powerDrawn() == 0;
+  }
+
+  @Override
+  public String toString() {
+    return "device: " + deviceId + ", " +
+        "port: " + this.portNumber + ", " +
+        "currentConsumption: " + this.currentConsumption + ", " +
+        "powerDrawn: " + this.powerDrawn + ", " +
+        "annotations: " + annotations();
+  }
+
   public static final class Builder implements PortStatistics.Builder {
 
     DeviceId deviceId = null;

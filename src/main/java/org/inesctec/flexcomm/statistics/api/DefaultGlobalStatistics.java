@@ -38,6 +38,19 @@ public final class DefaultGlobalStatistics extends AbstractAnnotated implements 
     return this.powerDrawn;
   }
 
+  @Override
+  public boolean isZero() {
+    return currentConsumption() == 0 && powerDrawn() == 0;
+  }
+
+  @Override
+  public String toString() {
+    return "device: " + deviceId + ", " +
+        "currentConsumption: " + this.currentConsumption + ", " +
+        "powerDrawn: " + this.powerDrawn + ", " +
+        "annotations: " + annotations();
+  }
+
   public static final class Builder implements GlobalStatistics.Builder {
 
     DeviceId deviceId = null;

@@ -16,6 +16,8 @@ public interface GlobalStatistics extends Annotated {
     return EMPTY;
   }
 
+  boolean isZero();
+
   interface Builder {
 
     Builder setCurrentConsumption(double currentConsumption);

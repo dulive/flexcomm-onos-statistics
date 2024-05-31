@@ -19,6 +19,8 @@ public interface PortStatistics extends Annotated {
     return EMPTY;
   }
 
+  boolean isZero();
+
   interface Builder {
 
     Builder setPortNumber(PortNumber portNumber);
